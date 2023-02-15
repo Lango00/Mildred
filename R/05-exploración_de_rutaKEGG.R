@@ -2,8 +2,8 @@ Biofilm_Vibrio<-c("map05111")
 
 
 library(tidyr)
-Biofilm_Vibrio_subset<-ko_bin_mapp%>%
-  drop_na(Pathway) %>%
+Biofilm_Vibrio_subset<-ko_bin_mapp
+  drop_na(Pathway) 
   get_subset_pathway(Pathway, Biofilm_Vibrio) 
 
 
