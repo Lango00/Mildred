@@ -1,10 +1,14 @@
 #para crear vector con el metabolismo de interes 
 Other_energy<-c("Fermentation", "Carbon fixation", "Methane metabolism", 
                 "Sulfur metabolism", "Nitrogen metabolism")
+Other_energy<-c("Energy metabolism")
 
 #para crear subconjuntos de la tabla 
-get_subset_pathway ( maped_ko_table , type_of_interest_feature ,
-                     interest_feature )
+library(tidyr)
+Energy_metabolisms<-ko_bin_mapp %>%
+  drop_na(Cycle) %>%
+  get_subset_pathway(Cycle, Other_energy)
+
 head(Energy_metabolisms)
 #> # A tibble: 6 x 19
 #>   Module Module_description   Pathway  Pathway_descripti… Cycle  Pathway_cycle  
@@ -22,11 +26,29 @@ head(Energy_metabolisms)
 
 
 #para graficar 
+#El argumento order_y ordenará las filas según una característica metabólica
+plot_heatmap(tibble_ko=Energy_metabolisms, 
+             y_axis=Pathway_cycle,
+             order_y= Cycle,
+             analysis = "KEGG",
+             calc="Percentage")
+#el argumento order_y ordenará las filas según una función de metadatos
+plot_heatmap(tibble_ko=Energy_metabolisms, 
+             y_axis=Pathway_cycle,
+             data_experiment=metadata,
+             order_x = Sample_site,
+             analysis = "KEGG",
+             calc="Percentage")
+#el argumento split permite dividir las filas según un valor específico de los metadatos
 plot_heatmap(tibble_ko=Energy_metabolisms, 
              y_axis=Pathway_cycle,
              order_y = Cycle,
+             split_y = TRUE,
              analysis = "KEGG",
              calc="Percentage")
-#el argumento order_x ordenará las filas según una función de metadatos
-#el argumento split permite dividir las filas según un valor específico de los metadatos
 #el argumento order_x le permite agregar información de anotaciones de los metadatos para las columnas
+plot_heatmap(tibble_ko = Energy_metabolisms,y_axis = Pathway_cycle,
+             analysis = "KEGG",data_experiment= metadata, 
+             calc = "Percentage",split_y = TRUE,order_x= Clades)
+                                      
+             
